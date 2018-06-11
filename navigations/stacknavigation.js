@@ -24,7 +24,7 @@ export default StackNavigator(
         },
     },
     {
-        initialRouteName: "Root",
+        initialRouteName: "ProfileSetup",
         navigationOptions: ({ navigation }) => {
             if(navigation.state.routeName == 'Root')
                 return {header:null}

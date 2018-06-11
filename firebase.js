@@ -1,17 +1,62 @@
 import firebase from 'react-native-firebase';
-import { AsyncStorage } from 'react-native'
+import RNSecureKeyStore from 'react-native-secure-key-store';
 
 
 export class Firestore{
-    init(token){
-        console.log(token);
+    constructor(){
+        this.storage_rf = firebase.storage().ref();;
         this.db = firebase.firestore();
-        return firebase.auth().signInWithCustomToken(token).then(u=>{
-            this.me = u.uid;
-            console.log(this.me+' connected...');
-        }).catch(function(error) {
-            console.log(error);
+    }
+
+    init(){
+        this.credential = firebase.auth.PhoneAuthProvider.credential(this.token, this.secret)
+        return new Promise((resolve, reject)=>{
+            firebase.auth().signInWithCredential(this.credential)
+            .then(user=>{
+                console.log(user)
+                this.user = user
+                resolve(user);
+            },
+            err=>{
+                reject(err)
+            })
         });
+    }
+
+    uploadPhoto(image){
+        let upload_rf = this.storage_rf.child('profile/'+this.user.uid+'.jpg')
+        return upload_rf.put(image.path, { contentType: image.mime })
+    }
+
+    authPhone(phoneNumber){
+        this.phoneNumber = phoneNumber
+        return  new Promise((resolve, reject)=>{
+            firebase.auth().signInWithPhoneNumber(phoneNumber)
+            .then(confirmResult => {
+                this.confirmResult = confirmResult
+                resolve(confirmResult)
+            })
+            .catch(error => reject(error));
+        });
+    }
+
+    confirmPhone(codeInput){
+        this.credential = firebase.auth.PhoneAuthProvider.credential(this.token, this.secret)
+        return new Promise((resolve, reject)=>{
+            firebase.auth().signInWithCredential(this.credential)
+            .then(user=>{
+                RNSecureKeyStore.set("token", this.token).then(t=>{
+                    RNSecureKeyStore.set("secret", this.secret).then(s=>{
+                        this.user = user;
+                        resolve(user);
+                    })
+                })
+            },
+            err=>{
+                reject(err)
+            })
+        });
+    
     }
 
     getChats(){

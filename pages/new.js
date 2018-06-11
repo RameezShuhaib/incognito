@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import {  View, Text, StyleSheet, Dimensions, TextInput, Picker } from 'react-native';
+import {  View, StyleSheet, Dimensions, TextInput, Picker, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import CountryCodes from '../data/CountryCodes';
 const {height, width} = Dimensions.get("window");
 import {Button, ThemeProvider} from 'react-native-ios-kit'
+import firebase from '../firebase'
 export default class NewScreen extends Component {
     static navigationOptions ={
         title:'Create account'
@@ -12,13 +13,25 @@ export default class NewScreen extends Component {
         super(props);
         this.state = {
           pno: '', 
-          country: null,
+          country: 'India',
           code: null,
         };
+        this.signup = this.signup.bind(this);
     }
+
+    signup(){
+        // firebase.authPhone(this.state.code+this.state.pno).then(confirmResult=>{
+        //     this.props.navigation.navigate('Verify')
+        // },
+        // err =>{
+        //     console.log(err)
+        // });
+        this.props.navigation.navigate('Verify')
+    }
+
     render() {
         return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.top}>
                 <Icon name="lock-reset" color="rgb(152, 153, 155)" size={150} />
             </View>
@@ -60,12 +73,12 @@ export default class NewScreen extends Component {
             <ThemeProvider>
                 <Button inline 
                 style={styles.verify}
-                onPress={()=>{this.props.navigation.navigate('Verify')}}
+                onPress={this.signup}
                 >
                 Next
                 </Button>
             </ThemeProvider>
-        </View>
+        </ScrollView>
         );
     }
 }
@@ -119,6 +132,7 @@ const styles = StyleSheet.create({
         backgroundColor:'white',
         padding: 15,
         width:width,
+        marginBottom: 40
     },
     picker:{
         backgroundColor: 'white',

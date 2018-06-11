@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {  View, Text, StyleSheet, Dimensions, TextInput, Picker } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
-import CountryCodes from '../data/CountryCodes';
+import firebase from '../firebase'
+
 const {height, width} = Dimensions.get("window");
 import {Button, ThemeProvider} from 'react-native-ios-kit'
 export default class NewScreen extends Component {
@@ -17,6 +18,15 @@ export default class NewScreen extends Component {
           c: null,
           d: null,
         };
+        this.verify = this.verify.bind(this)
+    }
+    verify(){
+        firebase.confirmPhone('12345').then(user=>{
+            this.props.navigation.navigate('ProfileSetup', user)
+        },
+        err=>{
+            console.log(err)
+        });
     }
     render() {
         return (
@@ -53,7 +63,7 @@ export default class NewScreen extends Component {
             </View>
             <ThemeProvider>
                 <Button inline style={styles.verify}
-                onPress={()=>{this.props.navigation.navigate('ProfileSetup')}}
+                onPress={this.verify}
                 >
                 Verify
                 </Button>

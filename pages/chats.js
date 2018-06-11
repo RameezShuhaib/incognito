@@ -74,6 +74,7 @@ export default class Chats extends Component {
 
   render() {
     return (
+      // this.state.modal ? {backgroundColor: 'rgba(0,0,0,0.5)'} : ''
       <View>
         <Modal
         animationType="slide"
@@ -84,7 +85,25 @@ export default class Chats extends Component {
         }}
         >
           <View style={styles.modalcontainer}>
+            <View style={styles.modaltop}>
+              <TouchableOpacity 
+              style={styles.modaltopbutton} 
+              onPress={()=>{this.setState({modal: false});}}
+              >
+                <Text>Close</Text>
+              </TouchableOpacity>
+            </View>
 
+            <View style={styles.row}>
+              <View style={styles.user_icon}>
+                <FAIcon name="user-secret" size={25}/>
+              </View>
+              <View>
+                <View style={styles.nameContainer}>
+                  <Text style={styles.nameTxt}>"Rameez"</Text>
+                </View>
+              </View>
+            </View>
           </View>
         </Modal>
         {/* <Header title="Chats"/> */}
@@ -193,11 +212,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   modalcontainer:{
+    // backgroundColor: 'rgb(233,233,238)',
+    shadowColor: 'rgb(64, 64, 64)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 2,
     backgroundColor: 'white',
     marginLeft: 30,
     marginRight: 30,
     marginTop: 80,
     height: 400,
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: 'rgb(207, 207, 208)',
+    
+  },
+  modaltop: {
+    height: 25,
+    flexDirection: 'column',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgb(207, 207, 208)'
+  },
+  modaltopbutton: {
+    alignSelf: 'flex-end',
+    marginRight: 10,
+    marginTop:5,
   }
 });

@@ -3,8 +3,9 @@ package com.incognitoapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import com.reactlibrary.securekeystore.RNSecureKeyStorePackage;
 import com.airbnb.android.react.maps.MapsPackage;
-import com.imagepicker.ImagePickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.rt2zz.reactnativecontacts.ReactNativeContacts;
@@ -30,8 +31,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PickerPackage(),
+            new RNSecureKeyStorePackage(),
             new MapsPackage(),
-            new ImagePickerPackage(),
             new VectorIconsPackage(),
             new RNFirebasePackage(),
             new ReactNativeContacts(),
