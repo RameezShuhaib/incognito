@@ -68,7 +68,7 @@ export default createBottomTabNavigator(
             }
             return options;
         },
-        initialRouteName: "Chats",
+        initialRouteName: "Profile",
         // tabBarComponent: TabBarBottom,
         tabBarPosition: 'bottom',
         animationEnabled: true,

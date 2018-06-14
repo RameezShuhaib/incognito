@@ -13,8 +13,9 @@ export class Firestore{
         return new Promise((resolve, reject)=>{
             firebase.auth().signInWithCredential(this.credential)
             .then(user=>{
-                console.log(user)
                 this.user = user
+                console.log(this.user)
+                this.profile_rf = this.storage_rf.child('profile/'+this.user.uid+'.jpg')
                 resolve(user);
             },
             err=>{
@@ -24,12 +25,43 @@ export class Firestore{
     }
 
     uploadPhoto(image){
-        let upload_rf = this.storage_rf.child('profile/'+this.user.uid+'.jpg')
-        return upload_rf.put(image.path, { contentType: image.mime })
+        this.profile_rf.put(image.path, { contentType: image.mime })
+        return this.getProfilePhoto()
+    }
+
+    getProfilePhoto(){
+        return new Promise((resolve, reject)=>{
+            this.profile_rf.getDownloadURL().then(url=>{
+                this.profile_url = url
+                resolve(url)
+            },
+            err=>{
+                reject(err)
+            });
+        });
+    }
+
+    setupUser(country, phone){
+        this.country = country
+        this.phoneNumber = phone
+        return this.db.collection("app").doc("users")
+        .collection(this.user.uid).doc('details')
+        .set({
+            phoneNumber: this.phoneNumber, 
+            country: this.country
+        });
+    }
+
+    setName(name){
+        this.name = name
+        return this.db.collection("app").doc("users")
+        .collection(this.user.uid).doc('details')
+        .update({
+            name: name
+        });
     }
 
     authPhone(phoneNumber){
-        this.phoneNumber = phoneNumber
         return  new Promise((resolve, reject)=>{
             firebase.auth().signInWithPhoneNumber(phoneNumber)
             .then(confirmResult => {
@@ -40,14 +72,21 @@ export class Firestore{
         });
     }
 
+    logout(){
+        RNSecureKeyStore.remove("token").then(t=>{
+            RNSecureKeyStore.remove("secret")
+        })
+    }
+
     confirmPhone(codeInput){
-        this.credential = firebase.auth.PhoneAuthProvider.credential(this.token, this.secret)
+        this.credential = firebase.auth.PhoneAuthProvider.credential(this.confirmResult.verificationId, codeInput)
         return new Promise((resolve, reject)=>{
             firebase.auth().signInWithCredential(this.credential)
             .then(user=>{
-                RNSecureKeyStore.set("token", this.token).then(t=>{
-                    RNSecureKeyStore.set("secret", this.secret).then(s=>{
+                RNSecureKeyStore.set("token", this.confirmResult.verificationId).then(t=>{
+                    RNSecureKeyStore.set("secret", codeInput).then(s=>{
                         this.user = user;
+                        console.log(this.user)
                         resolve(user);
                     })
                 })
@@ -60,7 +99,7 @@ export class Firestore{
     }
 
     getChats(){
-        return this.db.collection("app").doc("users").collection(this.me)
+        return this.db.collection("app").doc("users").collection(this.user.uid)
         .doc("chat").collection("chats")
     }
 

@@ -113,6 +113,9 @@ PODS:
     - React/Core
     - RSKImageCropper
   - RSKImageCropper (2.0.1)
+  - SDWebImage (4.4.0):
+    - SDWebImage/Core (= 4.4.0)
+  - SDWebImage/Core (4.4.0)
   - yoga (0.55.4.React)
 
 DEPENDENCIES:
@@ -133,6 +136,7 @@ DEPENDENCIES:
   - React/RCTVibration (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
+  - SDWebImage (~> 4.0)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -156,6 +160,7 @@ SPEC REPOS:
     - Protobuf
     - QBImagePickerController
     - RSKImageCropper
+    - SDWebImage
 
 EXTERNAL SOURCES:
   React:
@@ -190,8 +195,9 @@ SPEC CHECKSUMS:
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
   RNImageCropPicker: 32ca4b9fef4e1b7b85ba69494242122948117e06
   RSKImageCropper: 50d5a3e4160f0309b14d75b89d5ae2f496d56e0d
+  SDWebImage: b534502786e43dde36dfcaee89356fe6df30e203
   yoga: a23273df0088bf7f2bb7e5d7b00044ea57a2a54a
 
-PODFILE CHECKSUM: b8fe29b46ebdc177c1bf7d55a965953250c4310e
+PODFILE CHECKSUM: 227204f4009c0f286a89bb5a03c37122e077bad1
 
 COCOAPODS: 1.5.0

@@ -14,9 +14,9 @@ import Icon from 'react-native-vector-icons/Entypo';
 import FIcon from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Swipeable from 'react-native-swipeable';
+import firebase from '../firebase'
 
 const {height, width} = Dimensions.get("window");
-const profile_pic = require("../images/preeti.jpg")
 
 const rightButtons = [
   <View style={{backgroundColor:"#ff2d55", flex: 1, justifyContent:"center", paddingLeft: 18}}>
@@ -41,8 +41,17 @@ export default class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedTab: "Questions"
+      selectedTab: "Questions",
+      profile_url: null
     };
+  }
+  componentDidMount(){
+    firebase.getProfilePhoto().then(url=>{
+      this.setState({profile_url: firebase.profile_url})
+    },
+    err=>{
+      console.log(err)
+    });
   }
   displayDetails() {
     return(
@@ -53,7 +62,7 @@ export default class Profile extends Component {
               <Text style={styles.msgTxt}>Username</Text>
             </View>
             <View style={styles.nameContainer}>
-              <Text style={styles.nameTxt}>Preeti A</Text>
+              <Text style={styles.nameTxt}>{firebase.name}</Text>
             </View>
           </View>
         </View>
@@ -63,7 +72,7 @@ export default class Profile extends Component {
               <Text style={styles.msgTxt}>Mob</Text>
             </View>
             <View style={styles.nameContainer}>
-              <Text style={styles.nameTxt}>+91 9590656450</Text>
+              <Text style={styles.nameTxt}>{firebase.phoneNumber}</Text>
             </View>
           </View>
         </View>
@@ -73,7 +82,7 @@ export default class Profile extends Component {
               <Text style={styles.msgTxt}>Country</Text>
             </View>
             <View style={styles.nameContainer}>
-              <Text style={styles.nameTxt}>India</Text>
+              <Text style={styles.nameTxt}>{firebase.country}</Text>
             </View>
           </View>
         </View>
@@ -110,18 +119,18 @@ export default class Profile extends Component {
         <ScrollView style={styles.container}>
           <ImageBackground 
           style={styles.up} 
-          source={profile_pic}
+          source={this.state.profile_url? {uri: this.state.profile_url}: require('../images/contact.png')}
           blurRadius={40}
           >
+          {console.log(this.state.profile_url)}
             <Icon name="new-message" size={25} style={styles.writeMessage} />
             <Image
             style={styles.profile_pic}
-            source={profile_pic}/>
-            <Text style={styles.nameheader}>Preeti A</Text>
+            source={this.state.profile_url? {uri: this.state.profile_url}: require('../images/contact.png')}/>
+            <Text style={styles.nameheader}>{firebase.name}</Text>
             <SegmentedControlIOS
               style={styles.control}
               values={['Details', 'Questions']}
-              // selectedIndex={this.state.selectedIndex}
               tintColor="white"
               onValueChange={(val) => {
                 this.setState({
@@ -151,7 +160,6 @@ const styles = StyleSheet.create({
   up:{
     // flex: 1,
     flexDirection: "column",
-    backgroundColor: "yellow",
     alignItems: 'center'
   },
   down:{

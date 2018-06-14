@@ -17,17 +17,29 @@ export default class NewScreen extends Component {
           b: null,
           c: null,
           d: null,
+          e: null,
+          f: null,
         };
+        this.country = this.props.navigation.state.params.country
+        this.phone = this.props.navigation.state.params.phone
         this.verify = this.verify.bind(this)
     }
     verify(){
-        firebase.confirmPhone('12345').then(user=>{
-            this.props.navigation.navigate('ProfileSetup', user)
+        let code = this.state.a + this.state.b + this.state.c + this.state.d + this.state.e + this.state.f
+        firebase.confirmPhone(code).then(user=>{
+            firebase.setupUser(this.country, this.phone)
+            .then(res=>{
+                this.props.navigation.navigate('ProfileSetup', user)
+            },
+            err=>{
+                console.log(err)
+            })
         },
         err=>{
             console.log(err)
         });
     }
+
     render() {
         return (
         <View style={styles.container}>
@@ -41,24 +53,42 @@ export default class NewScreen extends Component {
                 style={styles.box}
                 maxLength={1}
                 value={this.state.a}
+                onChangeText={a=>this.setState({a})}
                 />
                 <TextInput
                 textAlign={'center'}
                 style={styles.box}
                 maxLength={1}
                 value={this.state.b}
+                onChangeText={b=>this.setState({b})}
                 />
                 <TextInput
                 textAlign={'center'}
                 style={styles.box}
                 maxLength={1}
                 value={this.state.c}
+                onChangeText={c=>this.setState({c})}
                 />
                 <TextInput
                 textAlign={'center'}
                 style={styles.box}
                 maxLength={1}
                 value={this.state.d}
+                onChangeText={d=>this.setState({d})}
+                />
+                <TextInput
+                textAlign={'center'}
+                style={styles.box}
+                maxLength={1}
+                value={this.state.e}
+                onChangeText={e=>this.setState({e})}
+                />
+                <TextInput
+                textAlign={'center'}
+                style={styles.box}
+                maxLength={1}
+                value={this.state.f}
+                onChangeText={f=>this.setState({f})}
                 />
             </View>
             <ThemeProvider>
@@ -94,10 +124,10 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     box:{
-        margin: 5,
+        margin: 3,
         backgroundColor: 'white',
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         borderRadius: 5,
     },
     verify:{

@@ -93,7 +93,6 @@ export default class Chats extends Component {
                 <Text>Close</Text>
               </TouchableOpacity>
             </View>
-
             <View style={styles.row}>
               <View style={styles.user_icon}>
                 <FAIcon name="user-secret" size={25}/>

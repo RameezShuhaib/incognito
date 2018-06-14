@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {  View, Text, StyleSheet, Dimensions, TextInput, Image } from 'react-native';
+import {  View, Text, StyleSheet, Dimensions, TextInput, Image, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 const {height, width} = Dimensions.get("window");
 import {Button, ThemeProvider} from 'react-native-ios-kit'
@@ -16,6 +16,7 @@ export default class NewScreen extends Component {
         this.state = {
           name: null,
           profile_pic: null,
+          progress: false,
         };
 
     }
@@ -27,14 +28,22 @@ export default class NewScreen extends Component {
             cropping: true
         })
         .then(image => {
-            firebase.uploadPhoto(image).then(res=>{
-                this.setState({profile_pic: image.path});
-                console.log(this.res)
+            console.log(image)
+            this.setState({progress: true})
+            firebase.uploadPhoto(image).then(url=>{
+                this.setState({progress: false})
+                this.setState({profile_pic: url})
             },
             err=>{
                 console.log(err);
-            })
+            });
         });
+    }
+
+    setup(){
+        firebase.setName(this.state.name).then(res=>{
+            this.props.navigation.navigate('Root')
+        })
     }
 
     render() {
@@ -42,9 +51,10 @@ export default class NewScreen extends Component {
         <View style={styles.container}>
             <View style={styles.top}>
                 {
-                    this.state.profile_pic?
-                    <Image source={{uri: this.state.profile_pic, width: 150, height: 150}}/>
-                    :<Icon name="user-plus" color="rgb(152, 153, 155)" size={150} />
+                    this.state.profile_pic || this.state.progress?
+                        this.state.profile_pic? <Image source={{uri: this.state.profile_pic, width: 150, height: 150}}/>
+                        : <ActivityIndicator size="large" color="black" />
+                    : <Icon name="user-plus" color="rgb(152, 153, 155)" size={150} />
                 }
             </View>
             <TextInput
@@ -67,7 +77,7 @@ export default class NewScreen extends Component {
             <ThemeProvider>
                 <Button inline 
                 style={styles.save}
-                onPress={()=>{this.props.navigation.navigate('Root')}}
+                onPress={this.setup}
                 >
                 Get Started!
                 </Button>

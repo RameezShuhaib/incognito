@@ -14,19 +14,20 @@ export default class NewScreen extends Component {
         this.state = {
           pno: '', 
           country: 'India',
-          code: null,
+          code: '+91',
         };
         this.signup = this.signup.bind(this);
     }
 
     signup(){
-        // firebase.authPhone(this.state.code+this.state.pno).then(confirmResult=>{
-        //     this.props.navigation.navigate('Verify')
-        // },
-        // err =>{
-        //     console.log(err)
-        // });
-        this.props.navigation.navigate('Verify')
+        let phone = this.state.code+this.state.pno;
+        firebase.authPhone(phone).then(confirmResult=>{
+            this.props.navigation.navigate('Verify', {country: this.state.country, phone: phone})
+        },
+        err =>{
+            console.log(err)
+        });
+        // this.props.navigation.navigate('Verify', {country: this.state.country, phone: this.state.pno})
     }
 
     render() {

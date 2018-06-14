@@ -3,6 +3,7 @@ package com.incognitoapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import io.rumors.reactnativefirebaseui.RNFirebaseUiPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.reactlibrary.securekeystore.RNSecureKeyStorePackage;
 import com.airbnb.android.react.maps.MapsPackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNFirebaseUiPackage(),
             new PickerPackage(),
             new RNSecureKeyStorePackage(),
             new MapsPackage(),
